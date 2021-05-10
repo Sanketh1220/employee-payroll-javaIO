@@ -1,3 +1,11 @@
+/****************************************************
+ * Purpose : Program to created a to watch over a file for activities performed on it
+ *
+ * @author Sanketh Chigurupalli
+ * @version 1.0
+ * @since 26-04-2021
+ *
+ ****************************************************/
 package com.javaio;
 
 import java.io.IOException;
@@ -10,19 +18,34 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 public class Java8WatchServiceExample {
     private final WatchService watcher;
+
+    // Created a Map passing watchkey and path
     private final Map<WatchKey, Path> dirWatchers;
 
+    /**
+     * @param dir
+     * @throws IOException
+     */
     Java8WatchServiceExample(Path dir) throws IOException {
         this.watcher = FileSystems.getDefault().newWatchService();
         this.dirWatchers = new HashMap<>();
         scanAndRegisterDirectories(dir);
     }
 
+    /**
+     * Registering the activities that need to be kept tracked
+     * @param dir
+     * @throws IOException
+     */
     private void registerDirectories(Path dir) throws IOException {
         WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
         dirWatchers.put(key, dir);
     }
 
+    /**
+     * @param start
+     * @throws IOException
+     */
     private void scanAndRegisterDirectories(final Path start) throws IOException {
         Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
             @Override
